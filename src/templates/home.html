@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask + Celery + Redis + Flower Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Flask + Celery + Redis + Flower Demo</h1>
+    <p class="pink-text">{{ message }}</p>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <div class="task-section">
+        <h2>🧮 Division Task</h2>
+        <form action="/submit_division" method="post" class="task-form">
+            <div class="form-group">
+                <label for="dividend">Dividend:</label>
+                <input type="number" id="dividend" name="dividend" value="20" required>
+            </div>
+            <div class="form-group">
+                <label for="divisor">Divisor:</label>
+                <input type="number" id="divisor" name="divisor" value="4" required>
+            </div>
+            <button type="submit" class="btn">Calculate (5 sec delay)</button>
+        </form>
+    </div>
+
+    <div class="task-section">
+        <h2>📝 Long Text Task</h2>
+        <form action="/submit_text_task" method="post" class="task-form">
+            <div class="form-group">
+                <label for="text">Text to process:</label>
+                <input type="text" id="text" name="text" value="Hello Celery World!" required>
+            </div>
+            <div class="form-group">
+                <label for="repeat">Repeat count:</label>
+                <input type="number" id="repeat" name="repeat" value="3" min="1" max="10" required>
+            </div>
+            <button type="submit" class="btn">Process Text (10 sec delay)</button>
+        </form>
+    </div>
+
+    <div class="task-section">
+        <h2>📊 Recent Task Results</h2>
+        {% if tasks %}
+            <div class="task-results">
+                {% for task in tasks %}
+                <div class="task-item {{ task.status.lower() }}">
+                    <strong>{{ task.name }}</strong> - 
+                    Status: <span class="status">{{ task.status }}</span>
+                    {% if task.result %}
+                    - Result: <span class="result">{{ task.result }}</span>
+                    {% endif %}
+                    <small>({{ task.id }})</small>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No tasks submitted yet. Submit a task above!</p>
+        {% endif %}
+    </div>
+
+    <div class="monitor-section">
+        <h2>🌸 Monitor Tasks</h2>
+        <p>View real-time task execution: <a href="http://localhost:5555" target="_blank" class="flower-link">Open Flower Dashboard</a></p>
+    </div>
+</div>
+
+</body>
+</html>

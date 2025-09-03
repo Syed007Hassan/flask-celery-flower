@@ -2,7 +2,7 @@
 name = "celery-flask-flower"
 version = "0.1.0"
 description = "Basic Celery + Flask + Flower Integration"
-authors = ["Your Name <your.email@example.com>"]
+authors = ["Hassan Ali"]
 readme = "README.md"
 packages = [{include = "src"}]
 

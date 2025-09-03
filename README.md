@@ -5,47 +5,41 @@ A complete demonstration of asynchronous task processing using Flask, Celery, Re
 ## Architecture Overview
 
 ```mermaid
-graph TB
-    %% Client Layer
+flowchart TD
     subgraph Client ["🌐 Client Layer"]
         Browser["🖥️ Web Browser<br/>User Interface"]
     end
     
-    %% Application Layer  
     subgraph WebApp ["🚀 Web Application Layer"]
-        Flask["⚡ Flask Server<br/>🔗 Port 5000<br/>📄 Routes & Views<br/>🎯 Task Submission"]
+        Flask["⚡ Flask Server<br/>Port 5000<br/>Routes & Views<br/>Task Submission"]
     end
     
-    %% Processing Layer
-    subgraph Processing ["⚙️ Background Processing Layer"] 
-        Worker["🔄 Celery Worker<br/>📊 Task Execution<br/>⏱️ Progress Tracking<br/>🛠️ Error Handling"]
-        Monitor["🌺 Flower Dashboard<br/>🔗 Port 5555<br/>📈 Real-time Monitoring<br/>📋 Task Management"]
+    subgraph Processing ["⚙️ Background Processing Layer"]
+        Worker["🔄 Celery Worker<br/>Task Execution<br/>Progress Tracking<br/>Error Handling"]
+        Monitor["🌺 Flower Dashboard<br/>Port 5555<br/>Real-time Monitoring<br/>Task Management"]
     end
     
-    %% Data Layer
     subgraph Data ["💾 Data & Message Layer"]
-        Redis["🚀 Redis Server<br/>🔗 Port 6379<br/>📨 Message Broker<br/>💽 Result Backend<br/>⚡ In-Memory Store"]
+        Redis["🚀 Redis Server<br/>Port 6379<br/>Message Broker<br/>Result Backend<br/>In-Memory Store"]
     end
     
-    %% Connections with modern styling
-    Browser -.->|"🌐 HTTP GET/POST<br/>Form Submissions"| Flask
-    Flask -->|"📤 Task Queue<br/>division.delay()<br/>process_text.delay()"| Redis
-    Redis -->|"📥 Task Dispatch<br/>FIFO Queue"| Worker
-    Worker -->|"💾 Store Results<br/>Update Progress"| Redis  
-    Flask -.->|"🔍 Fetch Results<br/>AsyncResult()"| Redis
-    Browser -.->|"👀 Monitor Tasks<br/>Real-time View"| Monitor
-    Monitor -->|"📊 Query Metrics<br/>Worker Stats"| Redis
+    Browser -.->|"HTTP Requests<br/>Form Submissions"| Flask
+    Flask -->|"Task Queue<br/>division.delay()<br/>process_text.delay()"| Redis
+    Redis -->|"Task Dispatch<br/>FIFO Queue"| Worker
+    Worker -->|"Store Results<br/>Update Progress"| Redis
+    Flask -.->|"Fetch Results<br/>AsyncResult()"| Redis
+    Browser -.->|"Monitor Tasks<br/>Real-time View"| Monitor
+    Monitor -->|"Query Metrics<br/>Worker Stats"| Redis
     
-    %% Modern styling with gradients and shadows
-    classDef client fill:#667eea,stroke:#764ba2,stroke-width:3px,color:#fff,font-weight:bold
-    classDef webapp fill:#f093fb,stroke:#f5576c,stroke-width:3px,color:#fff,font-weight:bold  
-    classDef processing fill:#4facfe,stroke:#00f2fe,stroke-width:3px,color:#fff,font-weight:bold
-    classDef storage fill:#43e97b,stroke:#38f9d7,stroke-width:3px,color:#fff,font-weight:bold
-    classDef component fill:#ffffff,stroke:#333,stroke-width:2px,color:#333,font-weight:bold,font-size:12px
+    classDef client fill:#667eea,stroke:#764ba2,stroke-width:3px,color:#fff
+    classDef webapp fill:#f093fb,stroke:#f5576c,stroke-width:3px,color:#fff
+    classDef processing fill:#4facfe,stroke:#00f2fe,stroke-width:3px,color:#fff
+    classDef storage fill:#43e97b,stroke:#38f9d7,stroke-width:3px,color:#fff
+    classDef component fill:#ffffff,stroke:#333,stroke-width:2px,color:#333
     
     class Client client
     class WebApp webapp
-    class Processing processing  
+    class Processing processing
     class Data storage
     class Browser,Flask,Worker,Monitor,Redis component
 ```
